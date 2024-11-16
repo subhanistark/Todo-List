@@ -8,13 +8,12 @@ function App() {
   const [toggleFinished, setToggleFinished] = useState(true)
 
 
-  useEffect(() => {
-    let todoString = JSON.parse(localStorage.getItem("todos"))
+ useEffect(() => {
+    const todoString = JSON.parse(localStorage.getItem("todos"));
     if (todoString) {
-      let todos = JSON.parse(localStorage.getItem("todos"))
+      setTodos(todoString);
     }
-    setTodos(todoString)
-  }, [])
+  }, []);
 
   const saveLoc = (e) => {
     localStorage.setItem("todos", JSON.stringify(todos))
