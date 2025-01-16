@@ -8,24 +8,31 @@ function App() {
   const [toggleFinished, setToggleFinished] = useState(true)
 
 
- useEffect(() => {
-    const todoString = JSON.parse(localStorage.getItem("todos"));
+  useEffect(() => {
+    const todoString = localStorage.getItem("todos");
     if (todoString) {
-      setTodos(todoString);
+      try {
+        const parsedTodos = JSON.parse(todoString);
+        setTodos(parsedTodos);
+      } catch (error) {
+        console.error("Error parsing todos from localStorage:", error);
+      }
     }
   }, []);
+  
 
   const saveLoc = (e) => {
-    localStorage.setItem("todos", JSON.stringify(todos))
+    localStorage.setItem("todos", JSON.stringify(e))
   }
 
   const handleChange = (e) => {
     setTodo(e.target.value)
   }
   const handleSave = () => {
-    setTodos([...todos, { id: Date.now(), todo, isCompleted: false }])
+    const newTodos=[...todos, { id: Date.now(), todo, isCompleted: false }];
+    setTodos(newTodos)
     setTodo("")
-    saveLoc()
+    saveLoc(newTodos)
   }
   const handleCheck = (e) => {
     let id = e.target.name;
@@ -36,7 +43,7 @@ function App() {
     let newTodos = [...todos];
     newTodos[index].isCompleted = !newTodos[index].isCompleted;
     setTodos(newTodos)
-    saveLoc()
+    saveLoc(newTodos)
   }
 
   const handleEdit = (id) => {
@@ -45,7 +52,7 @@ function App() {
     });
     setTodo(newTodos[0].todo)
     handleDelete(id)
-    saveLoc()
+    saveLoc(newTodos)
   }
 
   const handleDelete = (id) => {
@@ -53,7 +60,7 @@ function App() {
       return item.id !== id;
     });
     setTodos(newTodos)
-    saveLoc()
+    saveLoc(newTodos)
   }
   const toggleFinish = () => {
     setToggleFinished(!toggleFinished)
